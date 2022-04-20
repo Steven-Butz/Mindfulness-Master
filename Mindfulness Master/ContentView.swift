@@ -6,32 +6,21 @@
 //
 
 import SwiftUI
+import HealthKit
+import EventKit
 
 struct ContentView: View {
     var body: some View {
         
         VStack {
-            
-
-            
-                
             Image("logo")
                 .resizable()
-                .aspectRatio(contentMode: /*@START_MENU_TOKEN@*/.fit/*@END_MENU_TOKEN@*/)
+                .aspectRatio(contentMode: .fit)
                 
-            
             Text("Hello, world!")
                 .padding()
             
-            
-            
-            
-            
-            
         }
-    
-    
-    
     }
 }
 
