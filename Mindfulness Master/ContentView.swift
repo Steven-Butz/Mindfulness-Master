@@ -10,16 +10,17 @@ import HealthKit
 import EventKit
 
 struct ContentView: View {
+    
+    @StateObject var store = EventKitManager()
+    
     var body: some View {
         
         VStack {
             Image("logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                
-            Text("Hello, world!")
-                .padding()
-            
+
+            Text("Take a break at \(store.recommendation)")
         }
     }
 }

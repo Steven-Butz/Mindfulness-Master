@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D8D07862810D92500C2E8D3 /* EventKitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D07852810D92500C2E8D3 /* EventKitStore.swift */; };
 		7A81E70827DADAE70058A5B9 /* Mindfulness_MasterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A81E70727DADAE70058A5B9 /* Mindfulness_MasterApp.swift */; };
 		7A81E70A27DADAE70058A5B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A81E70927DADAE70058A5B9 /* ContentView.swift */; };
 		7A81E70C27DADAEA0058A5B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A81E70B27DADAEA0058A5B9 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D8D07852810D92500C2E8D3 /* EventKitStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventKitStore.swift; sourceTree = "<group>"; };
 		7A81E70427DADAE70058A5B9 /* Mindfulness Master.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mindfulness Master.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A81E70727DADAE70058A5B9 /* Mindfulness_MasterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mindfulness_MasterApp.swift; sourceTree = "<group>"; };
 		7A81E70927DADAE70058A5B9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				7A81E70927DADAE70058A5B9 /* ContentView.swift */,
 				7A81E70B27DADAEA0058A5B9 /* Assets.xcassets */,
 				7A81E70D27DADAEA0058A5B9 /* Preview Content */,
+				0D8D07852810D92500C2E8D3 /* EventKitStore.swift */,
 			);
 			path = "Mindfulness Master";
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A81E70A27DADAE70058A5B9 /* ContentView.swift in Sources */,
+				0D8D07862810D92500C2E8D3 /* EventKitStore.swift in Sources */,
 				7A81E70827DADAE70058A5B9 /* Mindfulness_MasterApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -440,6 +444,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Mindfulness Master/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "This app requires access to your calendar data to plan meditation";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -469,6 +474,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Mindfulness Master/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "This app requires access to your calendar data to plan meditation";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
