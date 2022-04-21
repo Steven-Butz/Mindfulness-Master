@@ -8,10 +8,12 @@
 import SwiftUI
 import HealthKit
 import EventKit
+import UserNotifications
 
 struct ContentView: View {
     
-    @StateObject var store = EventKitManager()
+    @StateObject var store = EventKitManager() // Call this when we detect HRV event
+    // it will compute recommendation time and send notification
     
     var body: some View {
         
