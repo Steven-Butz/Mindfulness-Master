@@ -19,7 +19,6 @@ class EventKitManager: ObservableObject {
     @Published var recommendation : Date? // Re-populate this with our recommendation to meditate
     
     init() {
-        print("Initializing eventKit")
         requestAccessToCalendar { success in
             guard success == true else {
                 print("Could not authorize calendar")
@@ -148,8 +147,10 @@ class EventKitManager: ObservableObject {
         let content = UNMutableNotificationContent()
         content.title = "Find your calm"
         content.body = "Meditate at \(recommendation!)"
+        
+        let interval = recommendation!.timeIntervalSince(Date.now)
     
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
         let request = UNNotificationRequest(identifier: "meditate", content: content, trigger: trigger)
         let notificationCenter = UNUserNotificationCenter.current()
         

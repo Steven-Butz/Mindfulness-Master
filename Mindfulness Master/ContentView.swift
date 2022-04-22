@@ -50,25 +50,22 @@ struct ContentView: View {
             Color(red: 0.229, green: 0.531, blue: 0.996)
                 .ignoresSafeArea()
             
-        
-        VStack {
-
-            
-            Spacer().frame(height: 40)
-            
-            if let healthStore = healthStore {
+            VStack {
                 
-                HStack {
+                Spacer().frame(height: 30)
+                
+                HStack(alignment: .top) {
                     Text("Weekly Average HRV: ")
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)
+                        
                     Text(String(format: "%.2f", healthStore.avgHrv ?? 0) + " ms")
                         .font(.title2)
                         .fontWeight(.black)
                         .foregroundColor(Color(hue: 1.0, saturation: 0.996, brightness: 0.844))
                     
-                }
+                }.frame(alignment: .topLeading)
                 
                 
                 Spacer().frame(height: 10)
@@ -78,7 +75,7 @@ struct ContentView: View {
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)
-                    Text(String(format: "%.2f", healthStore.avgHrv ?? 0) + " ms")
+                    Text(String(format: "%.2f", healthStore.latestHrv ?? 0) + " ms")
                         .font(.title2)
                         .fontWeight(.black)
                         .foregroundColor(Color(hue: 1.0, saturation: 0.996, brightness: 0.844))
@@ -86,62 +83,81 @@ struct ContentView: View {
                 }
                 .padding(.leading, 98)
                 
-            }
             
-            Spacer().frame(height: 35)
+                Spacer().frame(height:50)
             
-            Image("logo")
+                Image("logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                
+                
             
-            if let eventStore = eventStore {
                 if eventStore.recommendation != nil {
-                    Text("Take a break at \(eventStore.recommendation!)")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                        .foregroundColor(Color.white)
+                    Spacer().frame(height: 5)
+                    //VStack {
+                        Text("Take a break at:")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .foregroundColor(Color.white)
+                        
+                        
+                    Text("\(eventStore.recommendation!)")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .foregroundColor(Color.white)
+                                //Color(hue: 1.0, saturation: 0.996, brightness: 0.844))
+                    //}
+                    Spacer().frame(height: 40)
+                    
+                    
                 } else {
+                    Spacer()//.frame(height: 15)
                     Text("No current recommendation")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .padding()
                         .foregroundColor(Color.white)
+                    Spacer().frame(height:100)
                 }
-            }
+                
+                
+                
             // call eventStore.createEvent()
           
+            
 
             
-            Spacer()
-            
         // When timer fires to trigger getting latest HRV values
-        }.onReceive(scheduler.$timerFire) { _ in
-            if (scheduler.initialFire) {
+            }
+            .onReceive(scheduler.$timerFire) { _ in
+                if (scheduler.initialFire) {
                 scheduler.initialFire = false
                 return
-            }
+                }
             
-            guard healthStore.authorized == true else {
+                guard healthStore.authorized == true else {
                 return
-            }
+                }
             
-            healthStore.getAvgHRV{ avg in
-                healthStore.getLatestHRV { latest in
-                    print("Checking if latest is new")
-                    if latest != nil {
-                        print("Comparing latest to avg")
-                        compareHrv()
-                    } else {
-                        print("Latest was nil")
+                healthStore.getAvgHRV{ avg in
+                    healthStore.getLatestHRV { latest in
+                        print("Checking if latest is new")
+                        if latest != nil {
+                            print("Comparing latest to avg")
+                            compareHrv()
+                        } else {
+                            print("Latest was nil")
+                        }
                     }
                 }
             }
-        }
         
-    }
+        }
     }
 }
 

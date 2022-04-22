@@ -168,7 +168,7 @@ class HealthStore: ObservableObject {
     }
     
     func delayAdd() {
-        let soon = Calendar.current.date(byAdding: .second, value: 15, to: Date())
+        let soon = Calendar.current.date(byAdding: .second, value: 10, to: Date())
         let timer = Timer(fire: soon!, interval: 30, repeats: false) { timer in
             print("Data timer fired!!!!!!!!!!")
             self.addNewHrv()
