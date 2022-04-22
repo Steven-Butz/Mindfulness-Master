@@ -23,42 +23,42 @@ class HealthStore: ObservableObject {
     
     init() {
         
-//        requestAuthorization { success in
-//            guard success else {
-//                print("Not authorized")
-//                return
-//            }
-//            self.authorized = true
-//
-//            self.hrvInit { success in
-//                guard success else {
-//                    print("Could not initialize")
-//                    return
-//                }
-//                print("Hrv data initialized")
-//                self.getAvgHRV { avg in
-////                    DispatchQueue.main.async {
-////                        self.avgHrv = avg
-////                        print(self.avgHrv)
-////                    }
-//
-//                }
-//                self.getLatestHRV { latest in
-//                    guard latest != nil else {
-//                        return
+        requestAuthorization { success in
+            guard success else {
+                print("Not authorized")
+                return
+            }
+            self.authorized = true
+
+            self.hrvInit { success in
+                guard success else {
+                    print("Could not initialize")
+                    return
+                }
+                print("Hrv data initialized")
+                self.getAvgHRV { avg in
+//                    DispatchQueue.main.async {
+//                        self.avgHrv = avg
+//                        print(self.avgHrv)
 //                    }
-////                    DispatchQueue.main.async {
-////                        self.latestHrv = latest
-////                        print(self.latestHrv)
-////                    }
-//
-//                }
-//                self.delayAdd()
-//                //self.calculateHRV()
-//                //self.currentHRV()
-//            }
-//
-//        }
+
+                }
+                self.getLatestHRV { latest in
+                    guard latest != nil else {
+                        return
+                    }
+//                    DispatchQueue.main.async {
+//                        self.latestHrv = latest
+//                        print(self.latestHrv)
+//                    }
+
+                }
+                self.delayAdd()
+                //self.calculateHRV()
+                //self.currentHRV()
+            }
+
+        }
         
     }
     
