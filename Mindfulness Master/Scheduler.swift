@@ -10,17 +10,17 @@ import Foundation
 class Scheduler: ObservableObject {
 
 
-    let date: Date
+    let date: Date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
     var timer: Timer?
     var newDayTimer: Timer?
-    @Published var mostRecent: Date
+    @Published var mostRecent: Date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
     var doneToday: Bool = false
 
 
     init() {
 
-        date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
-        mostRecent = date
+//        date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
+//        mostRecent = date
         setUpTimer()
         setUpNewDayTimer()
 

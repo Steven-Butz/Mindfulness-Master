@@ -67,7 +67,6 @@ class EventKitManager: ObservableObject {
         
         let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: nil)
         events = store.events(matching: predicate)
-        print(events)
         print("Found \(events.count) events")
         
         var cur_event_end = Date.now
