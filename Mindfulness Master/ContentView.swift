@@ -12,59 +12,32 @@ import UserNotifications
 
 struct ContentView: View {
     
-    @StateObject private var eventStore: EventKitManager = EventKitManager()
-    @StateObject private var healthStore: HealthStore = HealthStore()
-    @State private var avgHRV: Double?
-    @State private var latestHRV: Double?
+    @StateObject var eventStore: EventKitManager = EventKitManager()
+    @StateObject var healthStore: HealthStore = HealthStore()
+    @StateObject var scheduler: Scheduler = Scheduler()
     
-    init() {
-//        healthStore!.hrvInit { success in
-//            guard success else {
-//                print("Could not initialize")
-//                return
-//            }
-////            healthStore!.avgHRV { hrv in
-////                print(type(of: hrv))
-////                print(hrv)
-////
-////            }
-//
-//        }
-//        healthStore!.avgHRV { hrv in
-//            if let hrv = hrv {
-//                avgHRV = hrv
-//            } else {
-//                print("avgHRV is nil")
-//            }
-        //}
-        
-    }
 
-    private func updateAvgHrv(avg: Double?) -> Void {
-        if let avg = avg {
-            avgHRV = avg
-        }
-    }
-    
-    private func updateLatestHrv(latest: Double?) -> Void {
-        if let latest = latest {
-            latestHRV = latest
-        }
-    }
-    
-    
-    
-    private func updateUIFromStatistics(statisticsCollection: HKStatisticsCollection) {
-        
-        //statisticsCollection.statistics()
-        
-        let startDate = Calendar.current.date(byAdding: .day, value: -7, to: Date())!
-        let endDate = Date()
-        
-        statisticsCollection.enumerateStatistics(from: startDate, to: endDate) { statistics, stop in
-            
-//            let count = statistics.averageQuantity()?.doubleValue(for: .secondUnit(with: .milli))
+
+//    init() {
 //
+//    }
+
+    
+    private func compareHrv() {
+        print("Comparing Hrv")
+        if healthStore.latestHrv! < healthStore.avgHrv! {
+            guard scheduler.doneToday == false else {
+                print("Already scheduled!")
+                return
+            }
+            print("Scheduling event")
+            scheduler.doneToday = true
+            print("Hrv was lower, triggering new eventStore calls")
+            eventStore.todaysEvents()
+            eventStore.sendNotification()
+            eventStore.createEvent()
+        } else {
+            print("Hrv was higher, not scheduling")
         }
     }
 
@@ -78,8 +51,8 @@ struct ContentView: View {
             Spacer().frame(height: 20)
             
             if let healthStore = healthStore {
-                Text("Weekly average HRV: " + String(format: "%f", healthStore.avgHrv ?? 0) + "ms")
-                Text("Latest HRV: " + String(format: "%f", healthStore.latestHrv ?? 0) + "ms")
+                Text("Weekly average HRV: " + String(format: "%.4f", healthStore.avgHrv ?? 0) + "ms")
+                Text("Latest HRV: " + String(format: "%.4f", healthStore.latestHrv ?? 0) + "ms")
             }
             Spacer().frame(height: 20)
             Image("logo")
@@ -91,71 +64,33 @@ struct ContentView: View {
                 Text("Take a break at \(eventStore.recommendation)")
                     .multilineTextAlignment(.center)
                     .padding()
+                
             }
+            // call eventStore.createEvent()
           
 
             
             Spacer()
             
-//            Text("Average HRV is " + String(format: "%f", avgHRV ?? 0))
-//                .onAppear {
-//                    if let healthStore = healthStore {
-//                        guard healthStore.authorized else {
-//                            print("CV not yet authorized")
-//                            return
-//                        }
-//                        healthStore.getAvgHRV { hrv in
-//                            if let hrv = hrv {
-//                                print("Successful query in ContentView")
-//                                print(hrv)
-//                                updateAvgHrv(avg: hrv)
-//                            }
-//
-//                        }
-//                    }
-//                }
+        // When timer fires to trigger getting latest HRV values
+        }.onReceive(scheduler.$mostRecent) { _ in
+            print("Received timer event")
+//            print("Received timer event")
+//            healthStore.addNewHrv()
+//            print("sleeping")
+//            sleep(5)
             
-//            Text("Latest HRV is " + String(format: "%f", latestHRV ?? 0))
-//                .onAppear {
-//                    if let healthStore = healthStore {
-//                        guard healthStore.authorized else {
-//                            print("CV not yet authorized")
-//                            return
-//                        }
-//                        healthStore.getLatestHRV { hrv in
-//                            if let hrv = hrv {
-//                                print("Successful latest query in CV")
-//                                print(hrv)
-//                                updateLatestHrv(latest: hrv)
-//
-//                            }
-//                        }
-//                    }
-//                }
-            
-            
-            
-            
-//            Text(String(hrv!))
-//                .padding()
-            
-            
-//                .onAppear {
-//                    if let healthStore = healthStore {
-//                        healthStore.requestAuthorization { success in
-//                            if success {
-//                                healthStore.calculateHRV { statisticsCollection in
-//                                    if let statisticsCollection = statisticsCollection {
-//                                        //update UI
-//                                        updateUIFromStatistics(statisticsCollection: statisticsCollection)
-//                                    }
-//
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-            
+            healthStore.getAvgHRV{ avg in
+                healthStore.getLatestHRV { latest in
+                    print("Checking if latest is new")
+                    if latest != nil {
+                        print("Comparing latest to avg")
+                        compareHrv()
+                    } else {
+                        print("Latest was nil")
+                    }
+                }
+            }
         }
     }
 }

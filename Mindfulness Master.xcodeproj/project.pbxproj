@@ -17,6 +17,7 @@
 		7A81E72527DADAEA0058A5B9 /* Mindfulness_MasterUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A81E72427DADAEA0058A5B9 /* Mindfulness_MasterUITestsLaunchTests.swift */; };
 		7AACF1A82810D1EB0020744F /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AACF1A72810D1EB0020744F /* EventKit.framework */; };
 		7AACF1AA2810D8630020744F /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AACF1A92810D8630020744F /* HealthStore.swift */; };
+		7AACF1AC2812AD2C0020744F /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AACF1AB2812AD2C0020744F /* Scheduler.swift */; };
 		7ADBF18B27F143B000ACD42B /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ADBF18A27F143B000ACD42B /* HealthKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +53,7 @@
 		7A81E72427DADAEA0058A5B9 /* Mindfulness_MasterUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mindfulness_MasterUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		7AACF1A72810D1EB0020744F /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		7AACF1A92810D8630020744F /* HealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStore.swift; sourceTree = "<group>"; };
+		7AACF1AB2812AD2C0020744F /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		7ADBF18827F143B000ACD42B /* Mindfulness Master.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Mindfulness Master.entitlements"; sourceTree = "<group>"; };
 		7ADBF18A27F143B000ACD42B /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -86,6 +88,7 @@
 		7A81E6FB27DADAE70058A5B9 = {
 			isa = PBXGroup;
 			children = (
+				7AACF1AB2812AD2C0020744F /* Scheduler.swift */,
 				7A81E70627DADAE70058A5B9 /* Mindfulness Master */,
 				7A81E71727DADAEA0058A5B9 /* Mindfulness MasterTests */,
 				7A81E72127DADAEA0058A5B9 /* Mindfulness MasterUITests */,
@@ -286,6 +289,7 @@
 				7A81E70A27DADAE70058A5B9 /* ContentView.swift in Sources */,
 				7AACF1AA2810D8630020744F /* HealthStore.swift in Sources */,
 				0D8D07862810D92500C2E8D3 /* EventKitStore.swift in Sources */,
+				7AACF1AC2812AD2C0020744F /* Scheduler.swift in Sources */,
 				7A81E70827DADAE70058A5B9 /* Mindfulness_MasterApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
