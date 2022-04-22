@@ -28,9 +28,10 @@ class EventKitManager: ObservableObject {
             self.requestNotificationsAuthorization()
             DispatchQueue.main.async {
                 self.todaysEvents()
+                self.sendNotification()
+                self.createEvent()
             }
-            self.sendNotification()
-            self.createEvent()
+            
         }
     }
     
@@ -66,22 +67,29 @@ class EventKitManager: ObservableObject {
         
         let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: nil)
         events = store.events(matching: predicate)
+        print(events)
         print("Found \(events.count) events")
         
         var cur_event_end = Date.now
         for activity in events {
+            if (activity.isAllDay) {
+                continue
+            }
             if (activity.startDate < Date.now && activity.endDate > Date.now) { // Is this event happening now?
                 print("Event ocurring now")
                 cur_event_end = activity.endDate
-                recommendation = activity.endDate
+                print(cur_event_end)
+                //recommendation = activity.endDate
+
             } else {
                 print("Event not ocurring now")
                 if (cur_event_end < (activity.startDate!)) { // Do we have a sufficient gap before it starts?
                     print("Time gap found!")
                     let difference = activity.startDate.timeIntervalSince(cur_event_end) / 60
                     if (difference >= 30) {
-                        print("Sufficient time gap found!")
+                        print("Sufficient time gap found! Updating recommendation")
                         recommendation = cur_event_end
+                        print(recommendation)
                         return
                     } else {
                         print("Insufficient time gap!")
@@ -92,7 +100,10 @@ class EventKitManager: ObservableObject {
                 cur_event_end = activity.endDate
             }
         }
+        print("Exited loop")
+        print(cur_event_end)
         self.recommendation = cur_event_end
+        print(self.recommendation)
 
         
         return
