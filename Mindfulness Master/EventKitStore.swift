@@ -147,7 +147,7 @@ class EventKitManager: ObservableObject {
         
         let content = UNMutableNotificationContent()
         content.title = "Find your calm"
-        content.body = "Meditate at \(recommendation!.formatted())"
+        content.body = "Meditate at \(recommendation!)"
     
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
         let request = UNNotificationRequest(identifier: "meditate", content: content, trigger: trigger)

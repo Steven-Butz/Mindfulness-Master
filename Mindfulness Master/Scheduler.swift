@@ -46,6 +46,7 @@ class Scheduler: ObservableObject {
         timer = Timer(fire: midnight!, interval: 86400, repeats: true) { timer in
             self.doneToday = false
         }
+        RunLoop.main.add(timer!, forMode: .common)
     }
 
     func setUpDemoTimer() {
