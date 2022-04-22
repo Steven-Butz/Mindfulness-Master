@@ -73,12 +73,15 @@ struct ContentView: View {
             Spacer()
             
         // When timer fires to trigger getting latest HRV values
-        }.onReceive(scheduler.$mostRecent) { _ in
-            print("Received timer event")
-//            print("Received timer event")
-//            healthStore.addNewHrv()
-//            print("sleeping")
-//            sleep(5)
+        }.onReceive(scheduler.$timerFire) { _ in
+            if (scheduler.initialFire) {
+                scheduler.initialFire = false
+                return
+            }
+            
+            guard healthStore.authorized == true else {
+                return
+            }
             
             healthStore.getAvgHRV{ avg in
                 healthStore.getLatestHRV { latest in

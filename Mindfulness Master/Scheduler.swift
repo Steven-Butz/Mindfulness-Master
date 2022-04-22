@@ -13,7 +13,8 @@ class Scheduler: ObservableObject {
     let date: Date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
     var timer: Timer?
     var newDayTimer: Timer?
-    @Published var mostRecent: Date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
+    @Published var timerFire: Date? // = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
+    var initialFire: Bool = true
     var doneToday: Bool = false
 
 
@@ -30,7 +31,7 @@ class Scheduler: ObservableObject {
         print("Setting up timer")
         timer = Timer(fire: date, interval: 86400, repeats: true) { timer in
             print("Timer fired!")
-            self.mostRecent = Date()
+            self.timerFire = Date()
         }
         RunLoop.main.add(timer!, forMode: .common)
         print("Timer added to runloop")
@@ -42,6 +43,7 @@ class Scheduler: ObservableObject {
         timer = Timer(fire: midnight!, interval: 86400, repeats: true) { timer in
             self.doneToday = false
         }
+        RunLoop.main.add(timer!, forMode: .common)
     }
 
 
