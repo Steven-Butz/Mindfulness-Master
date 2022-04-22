@@ -8,14 +8,20 @@
 import SwiftUI
 import HealthKit
 import EventKit
+import UserNotifications
 
 struct ContentView: View {
     
     private let healthStore: HealthStore?
+    /* @StateObject */ 
+    private let eventStore: EventKitManager?
     @State private var avgHRV: Double?
     @State private var latestHRV: Double?
     
     init() {
+        eventStore = EventKitManager() // Call this when we detect HRV event
+    // it will compute recommendation time and send notification
+      
         healthStore = HealthStore()
 //        healthStore!.hrvInit { success in
 //            guard success else {
@@ -75,6 +81,8 @@ struct ContentView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             
+          
+            Text("Take a break at \(eventStore.recommendation)")
             
             Text("Average HRV is " + String(format: "%f", avgHRV ?? 0))
                 .onAppear {
