@@ -12,17 +12,12 @@ import UserNotifications
 
 struct ContentView: View {
     
-    private let healthStore: HealthStore?
-    /* @StateObject */ 
-    private let eventStore: EventKitManager?
+    @StateObject private var eventStore: EventKitManager = EventKitManager()
+    @StateObject private var healthStore: HealthStore = HealthStore()
     @State private var avgHRV: Double?
     @State private var latestHRV: Double?
     
     init() {
-        eventStore = EventKitManager() // Call this when we detect HRV event
-    // it will compute recommendation time and send notification
-      
-        healthStore = HealthStore()
 //        healthStore!.hrvInit { success in
 //            guard success else {
 //                print("Could not initialize")
@@ -76,42 +71,67 @@ struct ContentView: View {
     
     var body: some View {
         
+        
         VStack {
+
+            
+            Spacer().frame(height: 20)
+            
+            if let healthStore = healthStore {
+                Text("Weekly average HRV: " + String(format: "%f", healthStore.avgHrv ?? 0) + "ms")
+                Text("Latest HRV: " + String(format: "%f", healthStore.latestHrv ?? 0) + "ms")
+            }
+            Spacer().frame(height: 20)
             Image("logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             
+            Spacer()
+            if let eventStore = eventStore {
+                Text("Take a break at \(eventStore.recommendation)")
+                    .multilineTextAlignment(.center)
+                    .padding()
+            }
           
-            Text("Take a break at \(eventStore.recommendation)")
-            
-            Text("Average HRV is " + String(format: "%f", avgHRV ?? 0))
-                .onAppear {
-                    
-                    if let healthStore = healthStore {
-                        healthStore.avgHRV { hrv in
-                            if let hrv = hrv {
-                                print("Successful query in ContentView")
-                                print(hrv)
-                                updateAvgHrv(avg: hrv)
-                            }
 
-                        }
-                    }
-                }
             
-            Text("Latest HRV is " + String(format: "%f", latestHRV ?? 0))
-                .onAppear {
-                    if let healthStore = healthStore {
-                        healthStore.latestHRV { hrv in
-                            if let hrv = hrv {
-                                print("Successful latest query in CV")
-                                print(hrv)
-                                updateLatestHrv(latest: hrv)
-                                
-                            }
-                        }
-                    }
-                }
+            Spacer()
+            
+//            Text("Average HRV is " + String(format: "%f", avgHRV ?? 0))
+//                .onAppear {
+//                    if let healthStore = healthStore {
+//                        guard healthStore.authorized else {
+//                            print("CV not yet authorized")
+//                            return
+//                        }
+//                        healthStore.getAvgHRV { hrv in
+//                            if let hrv = hrv {
+//                                print("Successful query in ContentView")
+//                                print(hrv)
+//                                updateAvgHrv(avg: hrv)
+//                            }
+//
+//                        }
+//                    }
+//                }
+            
+//            Text("Latest HRV is " + String(format: "%f", latestHRV ?? 0))
+//                .onAppear {
+//                    if let healthStore = healthStore {
+//                        guard healthStore.authorized else {
+//                            print("CV not yet authorized")
+//                            return
+//                        }
+//                        healthStore.getLatestHRV { hrv in
+//                            if let hrv = hrv {
+//                                print("Successful latest query in CV")
+//                                print(hrv)
+//                                updateLatestHrv(latest: hrv)
+//
+//                            }
+//                        }
+//                    }
+//                }
             
             
             

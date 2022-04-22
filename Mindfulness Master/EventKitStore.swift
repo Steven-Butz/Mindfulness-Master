@@ -10,23 +10,42 @@ import Combine
 import Foundation
 import SwiftUI
 
+@MainActor
 class EventKitManager: ObservableObject {
     
     var store = EKEventStore()
+    var authorized: Bool = false
     @Published var events: [EKEvent] = []
     @Published var recommendation = Date.now // Re-populate this with our recommendation to meditate
     
     init() {
-        requestAccessToCalendar()
-        requestNotificationsAuthorization()
-        todaysEvents()
-        sendNotification()
-        createEvent()
+        requestAccessToCalendar { success in
+            guard success == true else {
+                print("Could not authorize calendar")
+                return
+            }
+            self.authorized = true
+            self.requestNotificationsAuthorization()
+            DispatchQueue.main.async {
+                self.todaysEvents()
+            }
+            self.sendNotification()
+            self.createEvent()
+        }
     }
     
-    func requestAccessToCalendar() {
+    func requestAccessToCalendar(completion: @escaping (Bool?) -> Void) {
+        if self.authorized {
+            completion(true)
+            return
+        }
         store.requestAccess(to: .event) { success, error in
             self.store = EKEventStore()
+            guard error == nil else {
+                print("Could not authorize calendar")
+                return
+            }
+            completion(success)
         }
     }
     
@@ -73,7 +92,9 @@ class EventKitManager: ObservableObject {
                 cur_event_end = activity.endDate
             }
         }
-        recommendation = cur_event_end
+        self.recommendation = cur_event_end
+
+        
         return
     }
     

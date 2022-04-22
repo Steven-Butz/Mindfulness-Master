@@ -15,14 +15,18 @@ extension Date {
     }
 }
 
-class HealthStore {
+
+@MainActor class HealthStore: ObservableObject {
 
     
 //  if HKHealthStore.isHealthDataAvailable() {
 //            healthStore = HKHealthStore()
 //  }
     
+    public var authorized: Bool = false
     private let healthStore = HKHealthStore()
+    @Published var avgHrv: Double?
+    @Published var latestHrv: Double?
     //@Published var avgHrv: Double?
     
     init() {
@@ -35,23 +39,44 @@ class HealthStore {
                 return
             }
             print("succeeded authorizing")
+            self.authorized = true
             
-//            self.hrvInit { success in
-//                guard success else {
-//                    print("Could not initialize")
-//                    return
-//                }
-//
-//                //self.calculateHRV()
-//                //self.currentHRV()
-//            }
+            self.hrvInit { success in
+                guard success else {
+                    print("Could not initialize")
+                    return
+                }
+                print("Hrv data initialized")
+                self.getAvgHRV { avg in
+                    print("Updating healthstore's avg")
+                    DispatchQueue.main.async {
+                        self.avgHrv = avg
+                        print(self.avgHrv)
+                    }
+                    
+                    
+                }
+                self.getLatestHRV { latest in
+                    print("Updating healthstore's latest")
+                    DispatchQueue.main.async {
+                        self.latestHrv = latest
+                        print(self.latestHrv)
+                    }
+                    
+                }
+                //self.calculateHRV()
+                //self.currentHRV()
+            }
             
         }
         
     }
     
     func requestAuthorization(completion: @escaping (Bool) -> Void) {
-        
+        if self.authorized {
+            completion(true)
+            return
+        }
         let hrvType = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRateVariabilitySDNN)!
         
         //guard let healthStore = self.healthStore else { return completion(false) }
@@ -63,7 +88,7 @@ class HealthStore {
         }
     }
     
-    func avgHRV(completion: @escaping (Double?) -> Void) {
+    func getAvgHRV(completion: @escaping (Double?) -> Void) {
         let hrvType = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
         let startDate = Calendar.current.date(byAdding: .day, value: -7, to: Date())
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: [])
@@ -89,7 +114,7 @@ class HealthStore {
         
     }
     
-    func latestHRV(completion: @escaping (Double?) -> Void) {
+    func getLatestHRV(completion: @escaping (Double?) -> Void) {
         let hrvType = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
         let startDate = Calendar.current.date(byAdding: .day, value: -7, to: Date())
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: [])
@@ -247,6 +272,7 @@ class HealthStore {
                 }
             }
         }
+
         completion(true)
         
 //        healthStore.save(sample) { success, error in
