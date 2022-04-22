@@ -53,6 +53,7 @@ class HealthStore: ObservableObject {
 //                    }
                     
                 }
+                self.delayAdd()
                 //self.calculateHRV()
                 //self.currentHRV()
             }
@@ -166,12 +167,21 @@ class HealthStore: ObservableObject {
 
     }
     
+    func delayAdd() {
+        let soon = Calendar.current.date(byAdding: .second, value: 15, to: Date())
+        let timer = Timer(fire: soon!, interval: 30, repeats: false) { timer in
+            print("Data timer fired!!!!!!!!!!")
+            self.addNewHrv()
+        }
+        RunLoop.main.add(timer, forMode: .common)
+    }
+    
     func addNewHrv() {
         print("Adding new Hrv")
         
         let hrvType = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRateVariabilitySDNN)!
         
-        let testHrvQuantity: HKQuantity = HKQuantity(unit: .secondUnit(with: .milli), doubleValue: 60 + Double.random(in: 0...40))
+        let testHrvQuantity: HKQuantity = HKQuantity(unit: .secondUnit(with: .milli), doubleValue: 60)
         let startDate: Date = Date()
         let sample: HKQuantitySample = HKQuantitySample(type: hrvType, quantity: testHrvQuantity, start: startDate, end: startDate)
     

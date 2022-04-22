@@ -34,8 +34,9 @@ struct ContentView: View {
             scheduler.doneToday = true
             print("Hrv was lower, triggering new eventStore calls")
             eventStore.todaysEvents()
-            eventStore.sendNotification()
             eventStore.createEvent()
+            eventStore.sendNotification()
+            
         } else {
             print("Hrv was higher, not scheduling")
         }
@@ -61,10 +62,15 @@ struct ContentView: View {
             
             Spacer()
             if let eventStore = eventStore {
-                Text("Take a break at \(eventStore.recommendation)")
-                    .multilineTextAlignment(.center)
-                    .padding()
-                
+                if eventStore.recommendation != nil {
+                    Text("Take a break at \(eventStore.recommendation!)")
+                        .multilineTextAlignment(.center)
+                        .padding()
+                } else {
+                    Text("No current recommendation")
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
             }
             // call eventStore.createEvent()
           
@@ -73,12 +79,15 @@ struct ContentView: View {
             Spacer()
             
         // When timer fires to trigger getting latest HRV values
-        }.onReceive(scheduler.$mostRecent) { _ in
-            print("Received timer event")
-//            print("Received timer event")
-//            healthStore.addNewHrv()
-//            print("sleeping")
-//            sleep(5)
+        }.onReceive(scheduler.$timerFire) { _ in
+            if (scheduler.initialFire) {
+                scheduler.initialFire = false
+                return
+            }
+            
+            guard healthStore.authorized == true else {
+                return
+            }
             
             healthStore.getAvgHRV{ avg in
                 healthStore.getLatestHRV { latest in

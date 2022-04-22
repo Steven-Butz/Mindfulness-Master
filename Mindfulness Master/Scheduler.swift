@@ -13,7 +13,10 @@ class Scheduler: ObservableObject {
     let date: Date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
     var timer: Timer?
     var newDayTimer: Timer?
-    @Published var mostRecent: Date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
+    var demoTimer: Timer?
+    var dataTimer: Timer?
+    @Published var timerFire: Date? //Date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
+    var initialFire: Bool = true
     var doneToday: Bool = false
 
 
@@ -21,8 +24,9 @@ class Scheduler: ObservableObject {
 
 //        date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
 //        mostRecent = date
-        setUpTimer()
+        //setUpTimer()
         setUpNewDayTimer()
+        setUpDemoTimer()
 
     }
     
@@ -30,7 +34,7 @@ class Scheduler: ObservableObject {
         print("Setting up timer")
         timer = Timer(fire: date, interval: 86400, repeats: true) { timer in
             print("Timer fired!")
-            self.mostRecent = Date()
+            self.timerFire = Date()
         }
         RunLoop.main.add(timer!, forMode: .common)
         print("Timer added to runloop")
@@ -42,6 +46,15 @@ class Scheduler: ObservableObject {
         timer = Timer(fire: midnight!, interval: 86400, repeats: true) { timer in
             self.doneToday = false
         }
+    }
+
+    func setUpDemoTimer() {
+        let soon = Calendar.current.date(byAdding: .second, value: 20, to: Date())
+        demoTimer = Timer(fire: soon!, interval: 20, repeats: false) { timer in
+            print("Demo timer fired!!!!!!!!!!")
+            self.timerFire = Date()
+        }
+        RunLoop.main.add(demoTimer!, forMode: .common)
     }
 
 

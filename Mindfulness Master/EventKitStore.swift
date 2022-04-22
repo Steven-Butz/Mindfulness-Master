@@ -16,21 +16,29 @@ class EventKitManager: ObservableObject {
     var store = EKEventStore()
     var authorized: Bool = false
     @Published var events: [EKEvent] = []
-    @Published var recommendation = Date.now // Re-populate this with our recommendation to meditate
+    @Published var recommendation : Date? // Re-populate this with our recommendation to meditate
     
     init() {
+        print("Initializing eventKit")
         requestAccessToCalendar { success in
             guard success == true else {
                 print("Could not authorize calendar")
                 return
             }
-            self.authorized = true
-            self.requestNotificationsAuthorization()
-            DispatchQueue.main.async {
-                self.todaysEvents()
-                self.sendNotification()
-                self.createEvent()
+            self.requestNotificationsAuthorization { success in
+                guard success == true else {
+                    print("Could not authorize notifications")
+                    return
+                }
+                self.authorized = true
+                
+                self.demoEvents()
             }
+//            DispatchQueue.main.async {
+//                self.todaysEvents()
+//                self.sendNotification()
+//                self.createEvent()
+//            }
             
         }
     }
@@ -50,22 +58,32 @@ class EventKitManager: ObservableObject {
         }
     }
     
-    func requestNotificationsAuthorization() {
-      UNUserNotificationCenter.current()
+    func requestNotificationsAuthorization(completion: @escaping (Bool?) -> Void) {
+        if self.authorized {
+            completion(true)
+            return
+        }
+        UNUserNotificationCenter.current()
         .requestAuthorization(options: [.alert, .sound, .badge]) { success, error in
+            guard error == nil else {
+                print("Could not authorize notifications")
+                return
+            }
+            completion(success)
         }
     }
 
     func todaysEvents() {
         print("Checking today's events!")
         let calendar = Calendar.autoupdatingCurrent
-        let startDate = Date.now
         
-        var onDayComponents = DateComponents()
-        onDayComponents.hour = 6
-        let endDate = calendar.date(byAdding: onDayComponents, to: startDate)!
+        let midnight = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: Date())!
         
-        let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: nil)
+//        var onDayComponents = DateComponents()
+//        onDayComponents.hour = 6
+//        let endDate = calendar.date(byAdding: onDayComponents, to: startDate)!
+        
+        let predicate = store.predicateForEvents(withStart: Date(), end: midnight, calendars: nil)
         events = store.events(matching: predicate)
         print("Found \(events.count) events")
         
@@ -109,16 +127,16 @@ class EventKitManager: ObservableObject {
     }
     
     func createEvent() {
-        let eventStore = EKEventStore()
-        let event = EKEvent(eventStore: eventStore)
-        event.calendar = eventStore.defaultCalendarForNewEvents
+        //let eventStore = EKEventStore()
+        let event = EKEvent(eventStore: store)
+        event.calendar = store.defaultCalendarForNewEvents
         event.title = "Mindfulness"
-        event.startDate = recommendation.addingTimeInterval(900) // add 15 min buffer
+        event.startDate = recommendation!.addingTimeInterval(900) // add 15 min buffer
         let endDate = Date.init(timeInterval: 900, since: event.startDate)
         event.endDate = endDate
         
         do {
-          try eventStore.save(event, span: .thisEvent)
+          try store.save(event, span: .thisEvent)
         } catch {
           print("saving event error: \(error)")
         }
@@ -129,7 +147,7 @@ class EventKitManager: ObservableObject {
         
         let content = UNMutableNotificationContent()
         content.title = "Find your calm"
-        content.body = "Meditate at \(recommendation)"
+        content.body = "Meditate at \(recommendation!.formatted())"
     
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
         let request = UNNotificationRequest(identifier: "meditate", content: content, trigger: trigger)
@@ -141,4 +159,51 @@ class EventKitManager: ObservableObject {
             }
         }
     }
+    
+//    Add calendar events for demo
+    func demoEvents() {
+        
+        let calendar = Calendar.autoupdatingCurrent
+        
+        let midnight = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: Date())!
+        
+//        var onDayComponents = DateComponents()
+//        onDayComponents.hour = 6
+//        let endDate = calendar.date(byAdding: onDayComponents, to: startDate)!
+        
+        let predicate = store.predicateForEvents(withStart: Date(), end: midnight, calendars: nil)
+        let e = store.events(matching: predicate)
+
+        if (e.isEmpty || (e.count == 1 && e[0].isAllDay)) {
+            print("Adding demo events")
+            
+            let event = EKEvent(eventStore: store)
+            event.calendar = store.defaultCalendarForNewEvents
+            event.title = "Class"
+            event.startDate = Date()
+            event.endDate = Calendar.current.date(byAdding: .minute, value: 50, to: Date())
+            
+            do {
+              try store.save(event, span: .thisEvent)
+            } catch {
+              print("saving event error: \(error)")
+            }
+            
+            let event2 = EKEvent(eventStore: store)
+            event2.calendar = store.defaultCalendarForNewEvents
+            event2.title = "Work out"
+            event2.startDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
+            event2.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())
+            
+            do {
+              try store.save(event2, span: .thisEvent)
+            } catch {
+              print("saving event error: \(error)")
+            }
+            print("Added demo events")
+        }
+        
+
+    }
+    
 }
