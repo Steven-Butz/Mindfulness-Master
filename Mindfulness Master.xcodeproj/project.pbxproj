@@ -88,7 +88,6 @@
 		7A81E6FB27DADAE70058A5B9 = {
 			isa = PBXGroup;
 			children = (
-				7AACF1AB2812AD2C0020744F /* Scheduler.swift */,
 				7A81E70627DADAE70058A5B9 /* Mindfulness Master */,
 				7A81E71727DADAEA0058A5B9 /* Mindfulness MasterTests */,
 				7A81E72127DADAEA0058A5B9 /* Mindfulness MasterUITests */,
@@ -116,6 +115,7 @@
 				7A81E70927DADAE70058A5B9 /* ContentView.swift */,
 				7AACF1A92810D8630020744F /* HealthStore.swift */,
 				0D8D07852810D92500C2E8D3 /* EventKitStore.swift */,
+				7AACF1AB2812AD2C0020744F /* Scheduler.swift */,
 				7A81E70B27DADAEA0058A5B9 /* Assets.xcassets */,
 				7A81E70D27DADAEA0058A5B9 /* Preview Content */,
 			);
