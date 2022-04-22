@@ -128,7 +128,7 @@ class EventKitManager: ObservableObject {
     
     func createEvent() {
         //let eventStore = EKEventStore()
-        let event = EKEvent(eventStore: eventStore)
+        let event = EKEvent(eventStore: store)
         event.calendar = store.defaultCalendarForNewEvents
         event.title = "Mindfulness"
         event.startDate = recommendation!.addingTimeInterval(900) // add 15 min buffer
@@ -149,7 +149,9 @@ class EventKitManager: ObservableObject {
         content.title = "Find your calm"
         content.body = "Meditate at \(recommendation!)"
     
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        let interval = recommendation!.timeIntervalSince(Date.now)
+            
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
         let request = UNNotificationRequest(identifier: "meditate", content: content, trigger: trigger)
         let notificationCenter = UNUserNotificationCenter.current()
         

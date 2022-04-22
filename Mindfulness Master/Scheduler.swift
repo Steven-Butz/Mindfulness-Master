@@ -22,6 +22,7 @@ class Scheduler: ObservableObject {
 
 //        date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
 //        mostRecent = date
+        
         setUpTimer()
         setUpNewDayTimer()
 
