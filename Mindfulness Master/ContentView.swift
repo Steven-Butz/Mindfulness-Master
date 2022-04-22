@@ -45,31 +45,70 @@ struct ContentView: View {
     
     var body: some View {
         
+        ZStack {
+
+            Color(red: 0.229, green: 0.531, blue: 0.996)
+                .ignoresSafeArea()
+            
         
         VStack {
 
             
-            Spacer().frame(height: 20)
+            Spacer().frame(height: 40)
             
             if let healthStore = healthStore {
-                Text("Weekly average HRV: " + String(format: "%.4f", healthStore.avgHrv ?? 0) + "ms")
-                Text("Latest HRV: " + String(format: "%.4f", healthStore.latestHrv ?? 0) + "ms")
+                
+                HStack {
+                    Text("Weekly Average HRV: ")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color.white)
+                    Text(String(format: "%.2f", healthStore.avgHrv ?? 0) + " ms")
+                        .font(.title2)
+                        .fontWeight(.black)
+                        .foregroundColor(Color(hue: 1.0, saturation: 0.996, brightness: 0.844))
+                    
+                }
+                
+                
+                Spacer().frame(height: 10)
+                
+                HStack {
+                    Text("Latest HRV: ")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color.white)
+                    Text(String(format: "%.2f", healthStore.avgHrv ?? 0) + " ms")
+                        .font(.title2)
+                        .fontWeight(.black)
+                        .foregroundColor(Color(hue: 1.0, saturation: 0.996, brightness: 0.844))
+                    
+                }
+                .padding(.leading, 98)
+                
             }
-            Spacer().frame(height: 20)
+            
+            Spacer().frame(height: 35)
+            
             Image("logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             
-            Spacer()
             if let eventStore = eventStore {
                 if eventStore.recommendation != nil {
                     Text("Take a break at \(eventStore.recommendation!)")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .padding()
+                        .foregroundColor(Color.white)
                 } else {
                     Text("No current recommendation")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .padding()
+                        .foregroundColor(Color.white)
                 }
             }
             // call eventStore.createEvent()
@@ -101,6 +140,8 @@ struct ContentView: View {
                 }
             }
         }
+        
+    }
     }
 }
 
