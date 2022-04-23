@@ -30,12 +30,14 @@ struct ContentView: View {
                 print("Already scheduled!")
                 return
             }
-            print("Scheduling event")
+
             scheduler.doneToday = true
-            print("Hrv was lower, triggering new eventStore calls")
-            eventStore.todaysEvents()
-            eventStore.sendNotification()
-            eventStore.createEvent()
+            if (eventStore.todaysEvents()) {
+                print("Scheduling event")
+                eventStore.sendNotification()
+                eventStore.createEvent()
+            }
+
         } else {
             print("Hrv was higher, not scheduling")
         }
