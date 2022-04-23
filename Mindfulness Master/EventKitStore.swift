@@ -72,7 +72,7 @@ class EventKitManager: ObservableObject {
         }
     }
 
-    func todaysEvents() {
+    func todaysEvents() -> Bool {
         print("Checking today's events!")
         let calendar = Calendar.autoupdatingCurrent
         
@@ -91,24 +91,30 @@ class EventKitManager: ObservableObject {
             if (activity.isAllDay) {
                 continue
             }
+            
+            if (activity.title == "Mindfulness") {
+                print("Already added today")
+                self.recommendation = activity.startDate
+                return false
+            }
+            
             if (activity.startDate < Date.now && activity.endDate > Date.now) { // Is this event happening now?
-                print("Event ocurring now")
+
                 cur_event_end = activity.endDate
                 print(cur_event_end)
                 //recommendation = activity.endDate
 
-            } else {
-                print("Event not ocurring now")
+            } else { // Event not happening now
+
                 if (cur_event_end < (activity.startDate!)) { // Do we have a sufficient gap before it starts?
-                    print("Time gap found!")
+
                     let difference = activity.startDate.timeIntervalSince(cur_event_end) / 60
                     if (difference >= 30) {
-                        print("Sufficient time gap found! Updating recommendation")
-                        recommendation = cur_event_end
+                        print("Sufficient time gap found! Making recommendation")
+                        recommendation = cur_event_end.addingTimeInterval(900) // add 15 min buffer
                         print(recommendation)
-                        return
+                        return true
                     } else {
-                        print("Insufficient time gap!")
                         cur_event_end = activity.endDate
                     }
                 }
@@ -116,13 +122,11 @@ class EventKitManager: ObservableObject {
                 cur_event_end = activity.endDate
             }
         }
-        print("Exited loop")
-        print(cur_event_end)
-        self.recommendation = cur_event_end
+        print("Gap found, making recommendation")
+        self.recommendation = cur_event_end.addingTimeInterval(900) // add 15 min buffer
         print(self.recommendation)
-
         
-        return
+        return true
     }
     
     func createEvent() {
@@ -130,7 +134,7 @@ class EventKitManager: ObservableObject {
         let event = EKEvent(eventStore: store)
         event.calendar = store.defaultCalendarForNewEvents
         event.title = "Mindfulness"
-        event.startDate = recommendation!.addingTimeInterval(900) // add 15 min buffer
+        event.startDate = recommendation!
         let endDate = Date.init(timeInterval: 900, since: event.startDate)
         event.endDate = endDate
         

@@ -17,7 +17,7 @@ class Scheduler: ObservableObject {
     var dataTimer: Timer?
     @Published var timerFire: Date? //Date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
     var initialFire: Bool = true
-    var doneToday: Bool = false
+    @Published var doneToday: Bool = false
 
 
     init() {
@@ -51,8 +51,8 @@ class Scheduler: ObservableObject {
 
     func setUpDemoTimer() {
         let soon = Calendar.current.date(byAdding: .second, value: 20, to: Date())
+        print("Checking latest HRV value in 20 seconds...")
         demoTimer = Timer(fire: soon!, interval: 20, repeats: false) { timer in
-            print("Demo timer fired!!!!!!!!!!")
             self.timerFire = Date()
         }
         RunLoop.main.add(demoTimer!, forMode: .common)

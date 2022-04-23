@@ -30,12 +30,15 @@ struct ContentView: View {
                 print("Already scheduled!")
                 return
             }
-            print("Scheduling event")
             scheduler.doneToday = true
-            print("Hrv was lower, triggering new eventStore calls")
-            eventStore.todaysEvents()
-            eventStore.createEvent()
-            eventStore.sendNotification()
+            
+            // If event has not already been added today
+            if (eventStore.todaysEvents()) {
+                print("Scheduling event")
+                eventStore.createEvent()
+                eventStore.sendNotification()
+            }
+
             
         } else {
             print("Hrv was higher, not scheduling")
@@ -92,7 +95,7 @@ struct ContentView: View {
                 
                 
             
-                if eventStore.recommendation != nil {
+                if (eventStore.recommendation != nil && scheduler.doneToday) {
                     Spacer().frame(height: 5)
                     //VStack {
                         Text("Take a break at:")

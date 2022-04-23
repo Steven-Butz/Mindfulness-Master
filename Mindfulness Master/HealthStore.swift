@@ -141,7 +141,7 @@ class HealthStore: ObservableObject {
     // TODO? get to only run if there are no values currently in Health Store
     func hrvInit(completion: @escaping (Bool) -> Void) {
 
-        print("Initializing hrv values")
+        print("Initializing HRV values")
         let hrvType = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRateVariabilitySDNN)!
         
         var testHrvQuantities: [HKQuantity] = []
@@ -169,15 +169,15 @@ class HealthStore: ObservableObject {
     
     func delayAdd() {
         let soon = Calendar.current.date(byAdding: .second, value: 10, to: Date())
+        print("Adding new HRV value in 10 seconds...")
         let timer = Timer(fire: soon!, interval: 30, repeats: false) { timer in
-            print("Data timer fired!!!!!!!!!!")
             self.addNewHrv()
         }
         RunLoop.main.add(timer, forMode: .common)
     }
     
     func addNewHrv() {
-        print("Adding new Hrv")
+        print("Adding new HRV")
         
         let hrvType = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRateVariabilitySDNN)!
         
@@ -188,8 +188,6 @@ class HealthStore: ObservableObject {
         healthStore.save(sample) { success, error in
             if (error != nil) {
                 print("Couldn't save sample ")
-            } else {
-                print("Saved new Hrv")
             }
         }
         
