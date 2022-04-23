@@ -41,17 +41,17 @@ class HealthStore: ObservableObject {
 //                        self.avgHrv = avg
 //                        print(self.avgHrv)
 //                    }
-                    
-                }
-                self.getLatestHRV { latest in
-                    guard latest != nil else {
-                        return
-                    }
+
+//               }
+//                self.getLatestHRV { latest in
+//                    guard latest != nil else {
+//                        return
+//                    }
 //                    DispatchQueue.main.async {
 //                        self.latestHrv = latest
 //                        print(self.latestHrv)
 //                    }
-                    
+//                    
                 }
                 //self.calculateHRV()
                 //self.currentHRV()

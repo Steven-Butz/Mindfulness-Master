@@ -105,7 +105,7 @@ class EventKitManager: ObservableObject {
                     let difference = activity.startDate.timeIntervalSince(cur_event_end) / 60
                     if (difference >= 30) {
                         print("Sufficient time gap found! Updating recommendation")
-                        recommendation = cur_event_end
+                        recommendation = cur_event_end.addingTimeInterval(900) // add 15 min buffer
                         print(recommendation)
                         return
                     } else {
@@ -119,7 +119,7 @@ class EventKitManager: ObservableObject {
         }
         print("Exited loop")
         print(cur_event_end)
-        self.recommendation = cur_event_end
+        self.recommendation = cur_event_end.addingTimeInterval(900) // add 15 min buffer
         print(self.recommendation)
 
         
@@ -131,7 +131,7 @@ class EventKitManager: ObservableObject {
         let event = EKEvent(eventStore: store)
         event.calendar = store.defaultCalendarForNewEvents
         event.title = "Mindfulness"
-        event.startDate = recommendation!.addingTimeInterval(900) // add 15 min buffer
+        event.startDate = recommendation!
         let endDate = Date.init(timeInterval: 900, since: event.startDate)
         event.endDate = endDate
         

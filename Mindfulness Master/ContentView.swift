@@ -91,7 +91,7 @@ struct ContentView: View {
                 
                 
             
-                if eventStore.recommendation != nil {
+                if (eventStore.recommendation != nil && scheduler.doneToday) {
                     Spacer().frame(height: 5)
                     //VStack {
                         Text("Take a break at:")
@@ -136,6 +136,7 @@ struct ContentView: View {
             .onReceive(scheduler.$timerFire) { _ in
                 if (scheduler.initialFire) {
                     scheduler.initialFire = false
+                    scheduler.runInitialTimer()
                     return
                 }
             
@@ -150,7 +151,7 @@ struct ContentView: View {
                             print("Comparing latest to avg")
                             compareHrv()
                         } else {
-                            print("Latest was nil")
+                            print("Latest was not new")
                         }
                     }
                 }

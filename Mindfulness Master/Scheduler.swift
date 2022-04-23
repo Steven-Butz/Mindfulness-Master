@@ -13,9 +13,10 @@ class Scheduler: ObservableObject {
     let date: Date = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
     var timer: Timer?
     var newDayTimer: Timer?
+    var initialTimer: Timer?
     @Published var timerFire: Date? // = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!
     var initialFire: Bool = true
-    var doneToday: Bool = false
+    @Published var doneToday: Bool = false
 
 
     init() {
@@ -48,4 +49,10 @@ class Scheduler: ObservableObject {
     }
 
 
+    func runInitialTimer() {
+        initialTimer = Timer(timeInterval: 15, repeats: false, block: { timer in
+            self.timerFire = Date()
+        })
+        RunLoop.main.add(initialTimer!, forMode: .common)
+    }
 }
