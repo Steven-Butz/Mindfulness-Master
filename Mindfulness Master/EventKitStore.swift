@@ -198,7 +198,7 @@ class EventKitManager: ObservableObject {
             event2.calendar = store.defaultCalendarForNewEvents
             event2.title = "Work out"
             event2.startDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
-            event2.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())
+            event2.endDate = Calendar.current.date(byAdding: .minute, value: 30, to: event2.startDate)
             
             do {
               try store.save(event2, span: .thisEvent)

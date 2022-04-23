@@ -139,12 +139,12 @@ struct ContentView: View {
             }
             .onReceive(scheduler.$timerFire) { _ in
                 if (scheduler.initialFire) {
-                scheduler.initialFire = false
-                return
+                    scheduler.initialFire = false
+                    return
                 }
             
                 guard healthStore.authorized == true else {
-                return
+                    return
                 }
             
                 healthStore.getAvgHRV{ avg in
@@ -154,7 +154,7 @@ struct ContentView: View {
                             print("Comparing latest to avg")
                             compareHrv()
                         } else {
-                            print("Latest was nil")
+                            print("Latest was not new")
                         }
                     }
                 }
